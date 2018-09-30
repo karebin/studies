@@ -1,6 +1,6 @@
 package ru.stqa.ptf.addressbook.appmanager;
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.BrowserType;
@@ -28,15 +28,15 @@ public class AplicationManager {
 
     public void init() {
 
-        if (browser.equals(BrowserType.FIREFOX)){
+        if (browser.equals(BrowserType.FIREFOX)) {
             wd = new FirefoxDriver();
-        } else if (browser.equals(BrowserType.CHROME)){
+        } else if (browser.equals(BrowserType.CHROME)) {
             wd = new ChromeDriver();
-        } else if (browser.equals(BrowserType.SAFARI)){
+        } else if (browser.equals(BrowserType.SAFARI)) {
             wd = new SafariDriver();
         }
 
-        wd.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        wd.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         wd.get("http://localhost/addressbook/index.php");
         groupHelper = new GroupHelper(wd);
         navigationHelper = new NavigationHelper(wd);

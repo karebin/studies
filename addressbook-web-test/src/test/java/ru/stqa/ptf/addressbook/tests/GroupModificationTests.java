@@ -4,35 +4,30 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.ptf.addressbook.model.GroupData;
-
-import java.util.Comparator;
-import java.util.List;
+import java.util.Set;
 
 public class GroupModificationTests extends TestBase {
 
     @BeforeMethod
     public void ensurePreconditions(){
         app.goTo().groupPage();
-        if (app.group().list().size()==0) {
+        if (app.group().all().size()==0) {
             app.group().create(new GroupData().withName("test1"));
         }
     }
 
     @Test
     public void testGroupModification() {
-        List<GroupData> before = app.group().list();
-        int idex = before.size() - 1;
-        GroupData group = new GroupData().withId(before.get(idex).getId()).withName("test1")
-                .withHeader("test2").withHeader("test3");
-        app.group().modify(idex, group);
-        List <GroupData> after = app.group().list();
+        Set<GroupData> before = app.group().all();
+        GroupData modifydGroup = before.iterator().next();
+        GroupData group = new GroupData().withId(modifydGroup.getId()).withName("test1")
+                .withHeader("test2").withFooter("test3");
+        app.group().modify(modifydGroup);
+        Set <GroupData> after = app.group().all();
         Assert.assertEquals(after.size(), before.size());
 
-        before.remove(idex);
+        before.remove(modifydGroup);
         before.add(group);
-        Comparator<? super GroupData> byId = (o1, o2) -> Integer.compare(o1.getId(),o2.getId());
-        after.sort(byId);
-        before.sort(byId);
-        Assert.assertEquals(after, before);
+        Assert.assertEquals(before, after);
     }
 }

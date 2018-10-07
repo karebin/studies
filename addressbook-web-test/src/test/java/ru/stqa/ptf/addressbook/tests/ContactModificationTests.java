@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ContactModificationTests extends TestBase {
 
-    @Test
+    @Test (enabled = false)
     public void testContactModification() {
         if (!app.getContactHelper().isThereAContact()) {
             app.getContactHelper().createContact(new ContactData("firstName", "midleName",
@@ -20,13 +20,11 @@ public class ContactModificationTests extends TestBase {
                 "lastName2", "nickName2", "title2", "company2", null);
         app.getContactHelper().modificationContact(contact, before.size()-1);
         List<ContactData> after = app.getContactHelper().getContactList();
-
         before.remove(before.size()-1);
         before.add(contact);
         Comparator<? super ContactData> byId = (o1, o2) -> Integer.compare(o1.getId(),o2.getId());
         after.sort(byId);
         before.sort(byId);
         Assert.assertEquals(after, before);
-
     }
 }

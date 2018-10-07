@@ -1,30 +1,32 @@
 package ru.stqa.ptf.addressbook.tests;
 
+import org.hamcrest.CoreMatchers;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.ptf.addressbook.model.ContactData;
+import ru.stqa.ptf.addressbook.model.Contacts;
 
-import java.util.Comparator;
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactModificationTests extends TestBase {
 
-    @Test (enabled = false)
-    public void testContactModification() {
-        if (!app.getContactHelper().isThereAContact()) {
-            app.getContactHelper().createContact(new ContactData("firstName", "midleName",
-                    "lastName", "nickName", "title", "company", "test1"));
+    @BeforeMethod
+    public void ensurePreconditions(){
+        if (!app.contact().isThereAContact()) {
+            app.contact().create(new ContactData().withFirstName("firstName").withMidleName("midleName")
+                    .withLastName("lastName").withNickName("nickName").withTitle("title").withCompany("company"));
         }
-        List<ContactData> before = app.getContactHelper().getContactList();
-        ContactData contact = new ContactData("firstName3", "midleName3",
-                "lastName2", "nickName2", "title2", "company2", null);
-        app.getContactHelper().modificationContact(contact, before.size()-1);
-        List<ContactData> after = app.getContactHelper().getContactList();
-        before.remove(before.size()-1);
-        before.add(contact);
-        Comparator<? super ContactData> byId = (o1, o2) -> Integer.compare(o1.getId(),o2.getId());
-        after.sort(byId);
-        before.sort(byId);
-        Assert.assertEquals(after, before);
+    }
+
+    @Test
+    public void testContactModification() {
+        Contacts before = app.contact().all();
+        ContactData modifydContact = before.iterator().next();
+        ContactData contact = new ContactData().withFirstName("firstName2").withMidleName("midleName")
+                .withLastName("lastName").withNickName("nickName").withTitle("title").withCompany("company").withId(modifydContact.getId());
+        app.contact().modify(contact);
+        Contacts after = app.contact().all();
+        assertThat(after, CoreMatchers.equalTo(before.withOut(modifydContact).withAdded(contact)));
     }
 }

@@ -19,7 +19,7 @@ public class ContactDeletionTests extends TestBase {
         app.getContactHelper().initDeletionContact();
         app.getContactHelper().submitDeletionContact();
         app.getContactHelper().isElementPresent(By.linkText("Record successful deleted"));
-        app.getNavigationHelper().gotoGroupHome();
+        app.goTo().gotoGroupHome();
         List<ContactData> after = app.getContactHelper().getContactList();
         Assert.assertEquals(after.size(), before.size() - 1);
         before.remove(before.size() - 1);

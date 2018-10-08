@@ -1,19 +1,19 @@
 package ru.stqa.ptf.addressbook.tests;
 
 import org.hamcrest.CoreMatchers;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.ptf.addressbook.model.ContactData;
 import ru.stqa.ptf.addressbook.model.Contacts;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactModificationTests extends TestBase {
 
     @BeforeMethod
     public void ensurePreconditions(){
-        if (!app.contact().isThereAContact()) {
+        if (app.contact().all().size() == 0) {
             app.contact().create(new ContactData().withFirstName("firstName").withMidleName("midleName")
                     .withLastName("lastName").withNickName("nickName").withTitle("title").withCompany("company"));
         }
@@ -27,6 +27,7 @@ public class ContactModificationTests extends TestBase {
                 .withLastName("lastName").withNickName("nickName").withTitle("title").withCompany("company").withId(modifydContact.getId());
         app.contact().modify(contact);
         Contacts after = app.contact().all();
-        assertThat(after, CoreMatchers.equalTo(before.withOut(modifydContact).withAdded(contact)));
+        assertThat(after.size(), equalTo(before.size()));
+        assertThat(after, equalTo(before.withOut(modifydContact).withAdded(contact)));
     }
 }

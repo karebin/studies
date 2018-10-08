@@ -1,7 +1,5 @@
 package ru.stqa.ptf.addressbook.tests;
 
-import org.openqa.selenium.By;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.ptf.addressbook.model.ContactData;
@@ -15,7 +13,7 @@ public class ContactDeletionTests extends TestBase {
 
     @BeforeMethod
     public void ensurePreconditions(){
-        if (!app.contact().isThereAContact()) {
+        if (app.contact().all().size() == 0) {
             app.contact().create(new ContactData().withFirstName("firstName").withMidleName("midleName")
                     .withLastName("lastName").withNickName("nickName").withTitle("title").withCompany("company"));
         }
